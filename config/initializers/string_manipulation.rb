@@ -5,7 +5,8 @@ class String
     # link# without http doesn't work right now. I think it needs to be fixed with | (pipe symbol), not sure how to implement
     # beware of order of the gsub!s. the link one should be done first, since we don't want it to re-link the links after.
     temp.gsub!(/([Ll]ink#)?(http:\/\/[0-9a-zA-z_\/.\-;:?=&+%]+)([, $'"]?)/,"<a href=#{'\2'}>#{'\2'}</a>#{'\3'}")
-    temp.gsub!(/([Rr][Tt]#)([0-9]+)/,"<a href=http://uhu.its.yale.edu/Ticket/Display.html?id=#{'\2'}>#{'\1\2'}</a>")
+    #temp.gsub!(/([Rr][Tt]#)([0-9]+)/,"<a href=http://uhu.its.yale.edu/Ticket/Display.html?id=#{'\2'}>#{'\1\2'}</a>") # old style
+    temp.gsub!(/([Rr][Tt]\s?#?\s?)?([0-9]{5})/,"<a href=http://uhu.its.yale.edu/Ticket/Display.html?id=#{'\2'}>RT\##{'\2'}</a>") #tested on rubular: http://rubular.com/r/4fCkBeCpRI
     temp.gsub!(/([Ww]eke#)([0-9a-zA-Z_]+)([., $'"]?)/,"<a href=http://weke.its.yale.edu/wiki/index.php/Special:Search?search=#{'\2'}&go=Go>#{'\1\2'}</a>#{'\3'}")
     # temp.gsub!(/([Rr]eport#)([0-9]+)/, ActionView::Helpers::UrlHelper::link_to('\1\2', :controller => :report, :action => :view, :id => '\1'))
     temp
