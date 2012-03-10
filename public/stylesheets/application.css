@@ -762,7 +762,11 @@ table#requests_table tr td ul {
 	 margin-left:0px;
 }
 td.sub_reason {width:100%;}
-.sub_reason_container {white-space:pre-wrap;}
+.sub_reason_container {
+	width: 175px;
+	white-space:pre-wrap;
+	word-wrap: break-word;
+  }
 .sub_time_mandatory {color:#8A0808;}
 td.sub_location {text-align:center;}
 .sub_invalid {color:#6E6E6E;}
