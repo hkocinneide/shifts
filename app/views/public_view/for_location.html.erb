@@ -4,8 +4,12 @@
 <div id="left_stuff">
 	<fieldset class="index">
 		<legend>On Duty Now</legend>
-		<% @current_shifts.each do |shift| %>
-			<%= render :partial => "shift_user", :locals => { :shift => shift } %>
+	 	 <% if @current_shifts.empty? %>
+			There is currently no one on duty. Please check the table for upcoming shifts.
+	 	<% else %>
+			<% @current_shifts.each do |shift| %>
+				<%= render :partial => "shift_user", :locals => { :shift => shift } %>
+			<% end %>
 		<% end %>
 	</fieldset>
 </div>	
