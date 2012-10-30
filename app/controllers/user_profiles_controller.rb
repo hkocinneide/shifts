@@ -1,13 +1,14 @@
 class UserProfilesController < ApplicationController
 before_filter :user_login
   def index
+    @user_profiles = []
     @user_profiles = UserProfile.all.select{|profile| profile.user.is_active?(@department)}.sort_by{|profile| profile.user.reverse_name}
-    @user_profile_fields = UserProfileField.find_all_by_department_id(@department.id)
-    @index_profiles = UserProfileField.find(:all, :conditions => {:index_display => true})
+    @user_profile_fields =  UserProfileField.find(:all, :conditions => {:index_display => true, :department_id => @department.id})
   end
 
   def show
-    @user_profile = UserProfile.find_by_user_id(User.find_by_login(params[:id]).id)
+    @user = User.find_by_login(params[:id])
+    @user_profile = UserProfile.find_by_user_id(@user.id)
     unless @user_profile.user.departments.include?(@department)
       flash[:error] = "This user does not have a profile in this department."
     end
@@ -23,7 +24,11 @@ before_filter :user_login
     @user_profile = UserProfile.new(params[:user_profile])
     if @user_profile.save
       flash[:noticcurrent_user.is_admin_of(@department)] = "Successfully created user profile."
-      redirect_to @user_profile
+      if params[:user_profile] && params[:user_profile][:photo]
+        render :action => 'crop'
+      else
+        redirect_to @user_profile
+      end
     else
       render :action => 'new'
     end
@@ -50,6 +55,11 @@ before_filter :user_login
 
     @user = User.find(@user_profile.user_id)
     
+    if crop_errors
+      flash[:error] = "Cropping failed, please try again."
+      render :action => 'crop' and return
+    end
+      
     if params[:user_profile_entries]
       begin
         UserProfile.transaction do
@@ -80,7 +90,13 @@ before_filter :user_login
         flash[:error] = @failed.to_sentence + " all failed to save."
       end
     end
-    redirect_to user_profile_path(@user.login)
+    
+    #If user uploaded a new photo, crop it
+    if params[:user_profile] && params[:user_profile][:photo]
+      render :action => 'crop'
+    else
+      redirect_to user_profile_path(@user.login)
+    end
   end
 
   def destroy
@@ -91,6 +107,7 @@ before_filter :user_login
   end
 
   def search
+    @user_profile_fields =  UserProfileField.find(:all, :conditions => {:index_display => true, :department_id => @department.id})
     users = current_department.active_users
     #filter results if we are searching
     if params[:search]
@@ -108,9 +125,15 @@ before_filter :user_login
       @user_profiles << UserProfile.find_by_user_id(user.id)
     end
   end
-private
+  
+  private
   def user_login
     @user_profile = UserProfile.find(:all, :conditions => {:user_id => User.find_by_login(params[:id])})
   end
+  
+  def crop_errors
+    return params[:user_profile] && (params[:user_profile][:crop_w] == "0" or params[:user_profile][:crop_h] == "0")
+  end
+  
 end
 

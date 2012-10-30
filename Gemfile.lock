@@ -13,6 +13,9 @@ GEM
     activeresource (2.3.12)
       activesupport (= 2.3.12)
     activesupport (2.3.12)
+    airbrake (3.0.9)
+      activesupport
+      builder
     ar_mailer (1.5.1)
     authlogic (2.1.6)
       activesupport
@@ -27,6 +30,7 @@ GEM
       builder
     icalendar (1.1.6)
     mime-types (1.16)
+    mysql (2.8.1)
     paperclip (2.3.15)
       activerecord (>= 2.3.0)
       activesupport (>= 2.3.2)
@@ -60,6 +64,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  airbrake
   ar_mailer
   authlogic
   chronic
@@ -67,6 +72,7 @@ DEPENDENCIES
   has_many_polymorphs
   hoptoad_notifier
   icalendar
+  mysql
   paperclip (~> 2.3.15)
   pg
   prawn
