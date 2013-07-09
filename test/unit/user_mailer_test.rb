@@ -1,5 +1,6 @@
 require 'test_helper'
 
+#Will finish tests in later sprint
 class UserMailerTest < ActionMailer::TestCase
   def password_reset_instructions
     user = users(:users_001)
